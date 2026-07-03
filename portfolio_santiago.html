@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santiago León Galán — Cloud Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0F1F35;
+    --navy-2:  #162840;
+    --teal:    #00C2B2;
+    --teal-2:  #00E5D2;
+    --blue:    #0077CC;
+    --slate:   #4A6080;
+    --light:   #F4F7FA;
+    --white:   #FFFFFF;
+    --gray-1:  #E8EEF4;
+    --gray-2:  #CBD5E0;
+    --text:    #1C2B3A;
+    --muted:   #607080;
+    --mono:    'JetBrains Mono', monospace;
+    --sans:    'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(15,31,53,0.96);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 60px;
+    border-bottom: 1px solid rgba(0,194,178,0.2);
+  }
+  .nav-logo {
+    font-family: var(--mono); font-size: 13px; color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+    text-decoration: none; letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #0D2A40 100%);
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 80px 48px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 50%; height: 100%;
+    background: radial-gradient(ellipse at 70% 40%, rgba(0,194,178,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    max-width: 1100px; margin: 0 auto; width: 100%;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--teal); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .hero-name {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700; color: var(--white);
+    line-height: 1.1; margin-bottom: 8px;
+  }
+  .hero-name span { color: var(--teal); }
+  .hero-role {
+    font-size: 18px; font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 28px;
+  }
+  .hero-bio {
+    font-size: 15px; color: rgba(255,255,255,0.55);
+    line-height: 1.7; margin-bottom: 36px;
+    max-width: 480px;
+  }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--teal); color: var(--navy);
+    font-weight: 600; font-size: 14px;
+    padding: 12px 24px; border-radius: 6px;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--teal-2); transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8);
+    font-weight: 500; font-size: 14px;
+    padding: 12px 24px; border-radius: 6px;
+    text-decoration: none; transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* Hero right — stack pills */
+  .hero-stack { display: flex; flex-direction: column; gap: 12px; }
+  .stack-group { }
+  .stack-label {
+    font-family: var(--mono); font-size: 10px;
+    color: rgba(255,255,255,0.3); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .stack-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-family: var(--mono); font-size: 12px;
+    padding: 5px 12px; border-radius: 4px;
+    border: 1px solid rgba(0,194,178,0.25);
+    color: rgba(255,255,255,0.75);
+    background: rgba(0,194,178,0.06);
+  }
+  .pill.highlight {
+    border-color: var(--teal);
+    color: var(--teal);
+    background: rgba(0,194,178,0.1);
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 48px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--teal); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 28px; font-weight: 700;
+    color: var(--navy); margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-1);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--white); }
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 40px; padding: 32px 0;
+    border-bottom: 1px solid var(--gray-1);
+    position: relative;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-left { }
+  .timeline-date {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .timeline-company {
+    font-size: 13px; font-weight: 600;
+    color: var(--teal); margin-bottom: 2px;
+  }
+  .timeline-location {
+    font-size: 12px; color: var(--muted);
+  }
+  .timeline-right { }
+  .timeline-role {
+    font-size: 17px; font-weight: 600;
+    color: var(--navy); margin-bottom: 12px;
+  }
+  .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .timeline-bullets li {
+    font-size: 14px; color: var(--muted);
+    padding-left: 16px; position: relative; line-height: 1.6;
+  }
+  .timeline-bullets li::before {
+    content: '—'; position: absolute; left: 0;
+    color: var(--teal); font-size: 12px;
+  }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag {
+    font-family: var(--mono); font-size: 11px;
+    padding: 3px 10px; border-radius: 3px;
+    background: var(--gray-1); color: var(--slate);
+  }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--light); }
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--white);
+    border: 1px solid var(--gray-1);
+    border-radius: 10px;
+    padding: 28px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+  .project-card:hover {
+    border-color: var(--teal);
+    box-shadow: 0 4px 24px rgba(0,194,178,0.1);
+    transform: translateY(-2px);
+  }
+  .project-year {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--teal); margin-bottom: 10px;
+  }
+  .project-name {
+    font-size: 16px; font-weight: 600;
+    color: var(--navy); margin-bottom: 10px; line-height: 1.3;
+  }
+  .project-desc {
+    font-size: 13.5px; color: var(--muted);
+    line-height: 1.65; margin-bottom: 16px;
+  }
+  .project-tech { display: flex; flex-wrap: wrap; gap: 6px; }
+  .project-tech span {
+    font-family: var(--mono); font-size: 11px;
+    padding: 3px 9px; border-radius: 3px;
+    background: var(--light); color: var(--slate);
+    border: 1px solid var(--gray-2);
+  }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--white); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 32px;
+  }
+  .skill-group { }
+  .skill-group-title {
+    font-size: 13px; font-weight: 600;
+    color: var(--navy); margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--teal);
+    display: inline-block;
+  }
+  .skill-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .skill-list li {
+    font-size: 13.5px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .skill-list li::before {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── CERTIFICATIONS ── */
+  #certifications { background: var(--light); }
+  .certs-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .cert-card {
+    background: var(--white);
+    border: 1px solid var(--gray-1);
+    border-radius: 8px;
+    padding: 22px 24px;
+    display: flex; align-items: flex-start; gap: 16px;
+    transition: border-color 0.2s;
+  }
+  .cert-card:hover { border-color: var(--teal); }
+  .cert-icon {
+    width: 36px; height: 36px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .cert-info { }
+  .cert-name {
+    font-size: 13.5px; font-weight: 600;
+    color: var(--navy); line-height: 1.3; margin-bottom: 4px;
+  }
+  .cert-issuer {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+
+  /* ── EDUCATION ── */
+  #education { background: var(--white); }
+  .edu-list { display: flex; flex-direction: column; gap: 24px; }
+  .edu-item {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 24px; align-items: start;
+    padding: 24px; border-radius: 8px;
+    border: 1px solid var(--gray-1);
+    background: var(--light);
+  }
+  .edu-degree {
+    font-size: 16px; font-weight: 600;
+    color: var(--navy); margin-bottom: 4px;
+  }
+  .edu-school {
+    font-size: 13.5px; color: var(--teal); margin-bottom: 2px;
+  }
+  .edu-spec { font-size: 13px; color: var(--muted); }
+  .edu-year {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--muted); white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--navy);
+    text-align: center;
+    padding: 80px 48px;
+  }
+  #contact .section-eyebrow { color: var(--teal); }
+  #contact .section-title {
+    color: var(--white); border-color: rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .contact-text {
+    font-size: 16px; color: rgba(255,255,255,0.55);
+    max-width: 480px; margin: 0 auto 36px;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    padding: 10px 20px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .contact-link:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0A1628;
+    padding: 20px 48px;
+    text-align: center;
+    font-family: var(--mono); font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 80px 24px 60px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .timeline-item { grid-template-columns: 1fr; gap: 8px; }
+    #contact { padding: 60px 24px; }
+    footer { padding: 20px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">sleon.dev</div>
+  <ul class="nav-links">
+    <li><a href="#experience">Experiencia</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certificaciones</a></li>
+    <li><a href="#education">Formación</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="hero-eyebrow">Cloud Data Engineer</p>
+      <h1 class="hero-name">Santiago Juan<br><span>León Galán</span></h1>
+      <p class="hero-role">Azure · AWS · Terraform · Databricks · IaC</p>
+      <p class="hero-bio">
+        Más de 3 años diseñando e implementando arquitecturas cloud en Azure y AWS,
+        pipelines de datos a gran escala y automatización avanzada de CI/CD con
+        Infrastructure as Code. Orientado a entornos productivos de alta exigencia técnica.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">Ver proyectos</a>
+        <a href="#contact" class="btn-secondary">Contactar</a>
+      </div>
+    </div>
+    <div class="hero-stack">
+      <div class="stack-group">
+        <p class="stack-label">Cloud</p>
+        <div class="stack-pills">
+          <span class="pill highlight">Microsoft Azure</span>
+          <span class="pill highlight">AWS</span>
+          <span class="pill">Azure DevOps</span>
+          <span class="pill">Azure AI Foundry</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <p class="stack-label">Data</p>
+        <div class="stack-pills">
+          <span class="pill highlight">Databricks</span>
+          <span class="pill highlight">Spark</span>
+          <span class="pill">Azure ML Studio</span>
+          <span class="pill">SQL</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <p class="stack-label">IaC & DevOps</p>
+        <div class="stack-pills">
+          <span class="pill highlight">Terraform</span>
+          <span class="pill">Ansible</span>
+          <span class="pill">Docker</span>
+          <span class="pill">Jenkins</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <p class="stack-label">Lenguajes</p>
+        <div class="stack-pills">
+          <span class="pill highlight">Python</span>
+          <span class="pill">SQL</span>
+          <span class="pill">Java</span>
+          <span class="pill">TypeScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <p class="section-eyebrow">Trayectoria</p>
+    <h2 class="section-title">Experiencia profesional</h2>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <p class="timeline-date">Mar 2024 — Actualidad</p>
+          <p class="timeline-company">Smartup Digital</p>
+          <p class="timeline-location">Ciudad Real, España</p>
+        </div>
+        <div class="timeline-right">
+          <p class="timeline-role">Cloud Data Engineer</p>
+          <ul class="timeline-bullets">
+            <li>Diseño e implementación de arquitecturas cloud en Azure y AWS para proyectos de data engineering</li>
+            <li>Gestión de bases de datos a gran escala y procesamiento masivo con Spark y Databricks</li>
+            <li>Web Scraping con Python e integración con Azure Document Intelligence</li>
+            <li>Automatización de workflows en HubSpot mediante Python (2025)</li>
+            <li>Implementación de pipelines MLOps y CI/CD con Azure DevOps</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">Azure</span><span class="tag">Databricks</span><span class="tag">Spark</span>
+            <span class="tag">Python</span><span class="tag">Azure DevOps</span><span class="tag">HubSpot API</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <p class="timeline-date">Oct 2023 — Mar 2024</p>
+          <p class="timeline-company">Ikerlan</p>
+          <p class="timeline-location">Arrasate-Mondragón</p>
+        </div>
+        <div class="timeline-right">
+          <p class="timeline-role">Cloud Data Engineer</p>
+          <ul class="timeline-bullets">
+            <li>Desarrollo de pipelines de datos con Azure DevOps y Azure ML Studio</li>
+            <li>Orquestación de procesos de datos en entornos productivos cloud</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">Azure DevOps</span><span class="tag">Azure ML Studio</span><span class="tag">Python</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <p class="timeline-date">Abr 2022 — Oct 2023</p>
+          <p class="timeline-company">CGI</p>
+          <p class="timeline-location">Madrid, España</p>
+        </div>
+        <div class="timeline-right">
+          <p class="timeline-role">Consultor Junior — Centro de Excelencia Oracle</p>
+          <ul class="timeline-bullets">
+            <li>Proyectos para Santalucía, Sacyr y Grupo Piñero con metodología Scrum</li>
+            <li>Desarrollo backend con Java Spring, SQL y gestión de despliegues multi-entorno</li>
+            <li>CI/CD y automatización de procesos de publicación y migración web</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">Java Spring</span><span class="tag">SQL</span><span class="tag">Oracle</span><span class="tag">Scrum</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <p class="timeline-date">2021 — 2022</p>
+          <p class="timeline-company">UCLM — Grupo Alarcos</p>
+          <p class="timeline-location">Ciudad Real, España</p>
+        </div>
+        <div class="timeline-right">
+          <p class="timeline-role">Tecnólogo — Grupo de Investigación Alarcos</p>
+          <ul class="timeline-bullets">
+            <li>Colaboración en investigación y desarrollo en el grupo de investigación reconocido Alarcos (ESI)</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">Investigación</span><span class="tag">Software Engineering</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <p class="section-eyebrow">Portfolio</p>
+    <h2 class="section-title">Proyectos destacados</h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <p class="project-year">2024 – 2025</p>
+        <p class="project-name">Arquitectura Azure — Sector Farmacéutico</p>
+        <p class="project-desc">Diseño de arquitectura Azure completa para gestión de documentación interna y bases de datos a gran escala. Procesamiento masivo con Spark en Databricks y modelos personalizados de Document Intelligence.</p>
+        <div class="project-tech">
+          <span>Python</span><span>Databricks</span><span>Spark</span>
+          <span>Document Intelligence</span><span>Azure SQL</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <p class="project-year">2025</p>
+        <p class="project-name">ECOEMBES — ETL y Generación de Informes</p>
+        <p class="project-desc">Pipelines ETL desde múltiples fuentes heterogéneas, generación de informes automatizados y cálculos personalizados para reporting medioambiental a escala nacional.</p>
+        <div class="project-tech">
+          <span>Python</span><span>Azure</span><span>SQL</span><span>Reporting</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <p class="project-year">2025</p>
+        <p class="project-name">Automatización de Workflows — HubSpot</p>
+        <p class="project-desc">Desarrollo de automatizaciones avanzadas de workflows en HubSpot mediante Python, integrando la API de HubSpot con procesos internos de datos y reporting.</p>
+        <div class="project-tech">
+          <span>Python</span><span>HubSpot API</span><span>Automatización</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <p class="project-year">2023 – 2024</p>
+        <p class="project-name">MLOps Automatizado — Lisdata / Goizper</p>
+        <p class="project-desc">Pipeline MLOps semanal con preprocesamiento, ejecución de modelo ML y generación de informes. Infraestructura completa desplegada con Terraform vía Azure DevOps.</p>
+        <div class="project-tech">
+          <span>Terraform</span><span>Ansible</span><span>Azure DevOps</span><span>Azure ML Studio</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <p class="project-year">2023</p>
+        <p class="project-name">CI/CD Automatizado con Ansible y Terraform</p>
+        <p class="project-desc">Automatización end-to-end de un pipeline CI/CD: infraestructura AWS con Terraform, compilación, pruebas, imagen Docker y despliegue en producción mediante playbooks Ansible y Jenkins.</p>
+        <div class="project-tech">
+          <span>Ansible</span><span>Terraform</span><span>Docker</span><span>Jenkins</span><span>AWS</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <p class="section-eyebrow">Tecnología</p>
+    <h2 class="section-title">Stack técnico</h2>
+    <div class="skills-grid">
+
+      <div class="skill-group">
+        <p class="skill-group-title">Microsoft Azure</p>
+        <ul class="skill-list">
+          <li>Azure DevOps</li>
+          <li>Azure ML Studio</li>
+          <li>Azure AI Foundry</li>
+          <li>Databricks & Spark</li>
+          <li>Document Intelligence</li>
+          <li>Blob Storage & KeyVault</li>
+          <li>Azure SQL Database</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <p class="skill-group-title">Amazon Web Services</p>
+        <ul class="skill-list">
+          <li>Lambda</li>
+          <li>SageMaker</li>
+          <li>S3 & Glue</li>
+          <li>Redshift & RDS</li>
+          <li>IAM</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <p class="skill-group-title">IaC & DevOps</p>
+        <ul class="skill-list">
+          <li>Terraform</li>
+          <li>Ansible</li>
+          <li>Docker</li>
+          <li>Jenkins</li>
+          <li>Git</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <p class="skill-group-title">Lenguajes</p>
+        <ul class="skill-list">
+          <li>Python (avanzado)</li>
+          <li>SQL (avanzado)</li>
+          <li>Java & Spring</li>
+          <li>JavaScript & TypeScript</li>
+          <li>HTML & CSS</li>
+        </ul>
+      </div>
+
+      <div class="skill-group">
+        <p class="skill-group-title">Otros</p>
+        <ul class="skill-list">
+          <li>MongoDB & Postman</li>
+          <li>Scrum & Kanban</li>
+          <li>HubSpot API</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="section-inner">
+    <p class="section-eyebrow">Acreditaciones</p>
+    <h2 class="section-title">Certificaciones</h2>
+    <div class="certs-grid">
+
+      <div class="cert-card">
+        <div class="cert-icon">🏆</div>
+        <div class="cert-info">
+          <p class="cert-name">Academy Accreditation — Azure Databricks Platform Architect</p>
+          <p class="cert-issuer">Databricks</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">🤖</div>
+        <div class="cert-info">
+          <p class="cert-name">Generative AI Fundamentals Accreditation</p>
+          <p class="cert-issuer">Databricks</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">☁️</div>
+        <div class="cert-info">
+          <p class="cert-name">OCI 2023 Certified DevOps Professional</p>
+          <p class="cert-issuer">Oracle Cloud Infrastructure</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">☁️</div>
+        <div class="cert-info">
+          <p class="cert-name">OCI 2023 Certified Foundations Associate</p>
+          <p class="cert-issuer">Oracle Cloud Infrastructure</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">🗄️</div>
+        <div class="cert-info">
+          <p class="cert-name">Oracle Cloud Data Management 2023 Foundations Associate</p>
+          <p class="cert-issuer">Oracle</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-inner">
+    <p class="section-eyebrow">Formación</p>
+    <h2 class="section-title">Educación</h2>
+    <div class="edu-list">
+
+      <div class="edu-item">
+        <div>
+          <p class="edu-degree">Máster en DevOps</p>
+          <p class="edu-school">Universidad Internacional de La Rioja (UNIR)</p>
+        </div>
+        <p class="edu-year">2022 – 2023</p>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <p class="edu-degree">Grado en Ingeniería Informática — Bilingüe (Inglés)</p>
+          <p class="edu-school">Universidad de Castilla-La Mancha, ESI Ciudad Real</p>
+          <p class="edu-spec">Intensificación en Ingeniería del Software</p>
+        </div>
+        <p class="edu-year">2018 – 2022</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <p class="section-eyebrow">Contacto</p>
+    <h2 class="section-title">¿Hablamos?</h2>
+    <p class="contact-text">
+      Abierto a oportunidades remotas en Cloud Data Engineering, arquitecturas Azure/AWS
+      e IaC. Banda salarial a partir de 50.000€.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:sjleongalan@gmail.com" class="contact-link">
+        ✉ sjleongalan@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/santiago-león-galán-3176bb235/" target="_blank" class="contact-link">
+        in LinkedIn
+      </a>
+      <a href="tel:+34630477368" class="contact-link">
+        ✆ 630 477 368
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Santiago Juan León Galán · Cloud Data Engineer · Ciudad Real, España
+</footer>
+
+</body>
+</html>
